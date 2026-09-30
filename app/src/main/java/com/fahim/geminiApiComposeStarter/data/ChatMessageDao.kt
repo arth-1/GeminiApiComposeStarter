@@ -11,8 +11,8 @@ interface ChatMessageDao {
     fun getAllMessages(): Flow<List<ChatMessageEntity>>
 
     @Insert
-    suspend fun insertMessage(message: ChatMessageEntity): Long
+    fun insertMessage(message: ChatMessageEntity)
 
     @Query("DELETE FROM chat_messages")
-    suspend fun clearHistory(): Int
+    fun clearHistory()
 }

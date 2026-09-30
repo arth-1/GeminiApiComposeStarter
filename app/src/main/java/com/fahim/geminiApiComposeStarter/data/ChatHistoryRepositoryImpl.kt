@@ -1,23 +1,31 @@
 package com.fahim.geminiApiComposeStarter.data
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
-class ChatHistoryRepositoryImpl(private val dao: ChatMessageDao) : ChatHistoryRepository {
+class ChatHistoryRepositoryImpl(
+    private val chatMessageDao: ChatMessageDao
+) : ChatHistoryRepository {
     override fun getAllMessages(): Flow<List<ChatMessageEntity>> {
-        return dao.getAllMessages()
+        return chatMessageDao.getAllMessages()
     }
 
     override suspend fun addMessage(text: String, isUser: Boolean) {
-        dao.insertMessage(
-            ChatMessageEntity(
-                text = text,
-                isUser = isUser,
-                timestamp = System.currentTimeMillis()
+        withContext(Dispatchers.IO) {
+            chatMessageDao.insertMessage(
+                ChatMessageEntity(
+                    text = text,
+                    isUser = isUser,
+                    timestamp = System.currentTimeMillis()
+                )
             )
-        )
+        }
     }
 
     override suspend fun clearHistory() {
-        dao.clearHistory()
+        withContext(Dispatchers.IO) {
+            chatMessageDao.clearHistory()
+        }
     }
 }
